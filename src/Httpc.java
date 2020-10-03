@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -28,6 +27,9 @@ public class Httpc {
         URL url = new URL(userURL);
         String query = url.getQuery() == null ? "" : url.getQuery();
         System.out.println("query: " + query);
+        HttpClient client = new HttpClient();
+        GetRequest get = new GetRequest();
+        PostRequest post = new PostRequest();
         boolean isGetRequest = args[0].toLowerCase().equals("get");
         boolean isPostRequest = args[0].toLowerCase().equals("post");
         int numHeaders = 0;
@@ -41,5 +43,17 @@ public class Httpc {
         String [] headerArray = new String [numHeaders];
         System.out.println("headers: " + headerArray.toString());
 
+
+        //GET & POST scenario
+        if (args.length == 2){
+            if(isGetRequest) {
+                System.out.println("isget: true");
+                get.setRequestString(url.getPath(), query, url.getHost(), headerArray);
+                System.out.println("getrequeststring: " + get.getRequestString());
+            }
+            else if(isPostRequest){
+                post.setRequestString(url.getPath(), query, url.getHost(), ""); //???
+            }
+        }
     }
 }
