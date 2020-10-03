@@ -32,28 +32,32 @@ public class HttpClient {
         this.port = port;
     }
 
-    public void start(String ipAddress, int port) throws IOException {
+    public void start(String ipAddress, int port) throws IOException{
         setIPAddress(ipAddress);
         setPort(port);
         socket = new Socket(ipAddress, port);
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(socket.getOutputStream(), true);
-        System.out.println("Connected :)");
     }
 
     public void stop() throws IOException {
         input.close();
         output.close();
         socket.close();
-        System.out.println("Connection closed :)");
     }
 
     public void sendRequest(String request, boolean isVerbose) throws IOException {
+        output.println(request);
         String response;
         int count = 0;
         while ((response = input.readLine()) != null) {
             // Output when not verbose and when verbose respectively
-            System.out.println(response);
+            if (count > 8 && !isVerbose) {
+                System.out.println(response);
+            }
+            else if (isVerbose) {
+                System.out.println(response);
+            }
             count++;
         }
         output.flush();

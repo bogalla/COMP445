@@ -22,11 +22,12 @@ public class Httpc {
             return;
         }
 
+        // help scenarios done
+
         // Initialization
         String userURL = args[args.length - 1];
         URL url = new URL(userURL);
         String query = url.getQuery() == null ? "" : url.getQuery();
-        System.out.println("query: " + query);
         HttpClient client = new HttpClient();
         GetRequest get = new GetRequest();
         PostRequest post = new PostRequest();
@@ -39,20 +40,48 @@ public class Httpc {
                 numHeaders++;
             }
         }
-        //array of headers
+        // array of headers
         String [] headerArray = new String [numHeaders];
-        System.out.println("headers: " + headerArray.toString());
 
-
-        //GET & POST scenario
+        // GET & POST scenario
         if (args.length == 2){
             if(isGetRequest) {
-                System.out.println("isget: true");
                 get.setRequestString(url.getPath(), query, url.getHost(), headerArray);
-                System.out.println("getrequeststring: " + get.getRequestString());
             }
             else if(isPostRequest){
                 post.setRequestString(url.getPath(), query, url.getHost(), headerArray, "");
+            }
+        }
+
+        // deal with verbose
+        for(int i = 0; i < args.length; i++) {
+            if(args[i].contains("-v")){
+                if (isGetRequest){
+                    get.setIsVerbose(true);
+                    get.setRequestString(url.getPath(), query, url.getHost(), headerArray);
+                    break;
+                } else if (isPostRequest){
+                    post.setIsVerbose(true);
+                    post.setRequestString(url.getPath(), query, url.getHost(), headerArray, "");
+                    break;
+                }
+                System.out.println("call verbose");
+                return;
+            }
+        }
+
+        // deal with headers
+        for(int i = 0; i < args.length; i++) {
+            if(args[i].contains("-h")){
+                for (int x = 0; x < numHeaders; x++){
+                    headerArray[x] = args[i+1];
+                    if(isGetRequest){
+                        get.setRequestString(url.getPath(), query, url.getHost(), headerArray);
+                    } else if (isPostRequest){
+                        post.setRequestString(url.getPath(), query, url.getHost(), headerArray, "");
+                    }
+                    break;
+                }
             }
         }
 
