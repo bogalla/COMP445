@@ -52,8 +52,17 @@ public class Httpc {
                 System.out.println("getrequeststring: " + get.getRequestString());
             }
             else if(isPostRequest){
-                post.setRequestString(url.getPath(), query, url.getHost(), ""); //???
+                post.setRequestString(url.getPath(), query, url.getHost(), headerArray, "");
             }
         }
+
+        //Creates a connection and sends the request
+        client.start(url.getHost(), 80);
+        if (isGetRequest) {
+            client.sendRequest(get.getRequestString(), get.getIsVerbose());
+        } else if (isPostRequest) {
+            client.sendRequest(post.getRequestString(), post.getIsVerbose());
+        }
+        client.stop();
     }
 }

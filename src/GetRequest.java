@@ -8,6 +8,8 @@ public class GetRequest extends Request {
     }
 
     public void setRequestString(String path, String query, String host, String[] headers) {
-        super.setRequestString("GET", path, query, host);
+        super.setHeaderString(headers);
+        String headerString = super.getHeaderString();
+        super.setRequestString("GET", path, query, host, headerString);
     }
 }
