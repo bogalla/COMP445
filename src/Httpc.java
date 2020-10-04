@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -81,6 +82,35 @@ public class Httpc {
                         post.setRequestString(url.getPath(), query, url.getHost(), headerArray, "");
                     }
                     break;
+                }
+            }
+        }
+
+        //deal with file and inline
+        // will call only the first argument provided (never both)
+        for(int j = 0; j < args.length; j++){
+            for(int i = 0; i < args.length; i++){
+                if (args[i].contains("-d") ^ args[j].contains("-f")) {
+                    if (args[j].contains("-d") ^ args[i].contains("-f")) {
+                        if( args[i].contains("-d")){
+                            if (isPostRequest) {
+                                post.setRequestString(url.getPath(), "", url.getHost(), headerArray, args[i+1]);
+                            }
+                            i++;
+                            j++;
+                            break;
+                        }
+                        if (args[j].equals("-f")) {
+                            if (isPostRequest) {
+                                File f = new File("file.txt");
+                                post.setRequestString(url.getPath(), "", url.getHost(), headerArray, post.fileDataToString(f));
+                            }
+                            System.out.println("call file");
+                            j++;
+                            i++;
+                            break;
+                        }
+                    }
                 }
             }
         }
